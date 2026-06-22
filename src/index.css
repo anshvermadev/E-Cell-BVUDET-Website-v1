@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    @apply min-h-screen;
+    background-color: #000; /* Prevent white flash on mobile during fast scroll */
+  }
+  
+  body {
+    @apply antialiased text-gray-900;
+    overflow-x: hidden;
+    background-color: #000; /* fallback for some browsers showing white/black flashes */
+  }
+
+  #root {
+    @apply min-h-screen bg-black; /* ensure app root always paints black */
+  }
+}
+
+@layer components {
+  .nav-button {
+    @apply flex items-center px-3 py-2 text-gray-300 hover:text-white transition-all duration-300 relative 
+    after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full 
+    after:bg-gradient-to-r after:from-white after:to-gray-400 after:transition-all;
+  }
+
+  .mobile-nav-button {
+    @apply flex items-center w-full px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300;
+  }
+
+  .feature-card {
+    @apply bg-gradient-to-br from-gray-900 to-black p-8 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)] 
+    hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-500 relative overflow-hidden
+    text-gray-300 border border-gray-800;
+  }
+
+  .btn {
+    @apply inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-700 text-sm font-medium rounded-md
+    text-white bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300
+    shadow-[0_0_15px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(0,0,0,0.5)]
+    active:scale-95 touch-none select-none;
+  }
+
+  /* Pill button used on Home hero - matches provided design */
+  .pill-btn {
+    @apply inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-white font-semibold text-sm sm:text-base
+    border border-white/15 bg-gradient-to-b from-[#0e1420] to-[#0a0f1a]
+    shadow-[0_2px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_4px_18px_rgba(0,0,0,0.6)]
+    transition-all duration-300 relative overflow-hidden select-none;
+  }
+  .pill-btn::before { /* subtle inner glow at top-left */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120px 60px at 20% 0%, rgba(255,255,255,0.08), transparent 60%),
+                radial-gradient(140px 90px at 80% 120%, rgba(255,255,255,0.06), transparent 60%);
+    pointer-events: none;
+  }
+  .pill-btn:hover {
+    @apply border-white/25;
+    background-image: linear-gradient(to bottom, #111826, #0c1220);
+  }
+  .pill-btn:focus-visible {
+    @apply outline-none ring-2 ring-white/20 ring-offset-0;
+  }
+
+  .parallax {
+    @apply will-change-transform;
+  }
+
+  /* Reduce animations on mobile to improve scroll perf */
+  @media (max-width: 768px) {
+    .apply-now-btn,
+    .feature-card,
+    .nav-button,
+    .mobile-nav-button {
+      animation: none !important;
+      transition: transform 150ms ease, opacity 150ms ease, background-color 150ms ease;
+    }
+  }
+}
+
+/* Glowing effects */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    45deg,
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0.1) 100%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+/* Glowing text effect */
+.glow-text {
+  @apply bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent
+  hover:from-white hover:via-gray-200 hover:to-gray-400 transition-all duration-300;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
+}
+
+/* Profile card hover effect */
+.profile-card-glow {
+  @apply relative;
+}
+
+.profile-card-glow::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #ffffff20, #ffffff10, #ffffff20);
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.profile-card-glow:hover::after {
+  opacity: 1;
+}
+
+/* Mobile optimizations */
+@supports (-webkit-touch-callout: none) {
+  .btn {
+    -webkit-touch-callout: none;
+  }
+}
+
+/* Prevent text selection on interactive elements */
+.btn, .nav-button, .mobile-nav-button {
+  @apply select-none;
+}
+
+/* Page transition effects */
+.page-enter {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 300ms, transform 300ms;
+}
